@@ -16,7 +16,6 @@ program_break:
     ret
 
 handle_error:
-    ; Exemple :
     mov rax, 60         ; syscall number for exit
     xor rdi, rdi        ; Exit code 0 (ou un autre code d'erreur)
     syscall

@@ -12,19 +12,6 @@ int program_keeper(size_t size) {
     return keeper;
 }
 
-// void *program_break(void) {
-//     void *current_brk;
-
-//     asm (
-//         "mov $12, %%rax;"
-//         "syscall;"
-//         : "=rax" (current_brk)
-//         :
-//         : "rcx", "r11", "memory"
-//     );
-//     return current_brk;
-// }
-
 static void *alloc_mem(size_t size) {
     void *current_brk, *new_brk;
 
@@ -61,14 +48,6 @@ void *my_malloc(size_t size) {
         return ALLOWED_SPACE_IN_BLOCK(list);
     }
 
-    while (current != NULL) {
-        if (current->free && current->size >= size) {
-            current->free = 0;
-            return ALLOWED_SPACE_IN_BLOCK(current);
-        }
-        current = current->next;
-    }
-    current = list;
     while (current->next != NULL)
         current = current->next;
     current->next = alloc_block(size);
@@ -77,4 +56,10 @@ void *my_malloc(size_t size) {
 
 __attribute__((destructor)) void reset_program_break(void) {
     sbrk(-program_keeper(-0x2A));
+}
+
+void my_free(void *ptr) {
+    block_t *block = PTR_TO_BLOCK(ptr);
+
+    block->free = 1;
 }

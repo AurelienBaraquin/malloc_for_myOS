@@ -1,4 +1,5 @@
 void *my_malloc(int size);
+void my_free(void *ptr);
 
 #include <stdio.h>
 
@@ -30,6 +31,10 @@ int main() {
     str3[19] = '\0';
 
     printf("%s", str3);
+
+    my_free(str);
+    my_free(str2);
+    my_free(str3);
 
     return 0;
 }
