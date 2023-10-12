@@ -1,25 +1,30 @@
-void *my_malloc(int size);
-void my_free(void *ptr);
-void* my_realloc(void* ptr, int new_size);
-
 #include <stdio.h>
+#include "my_calloc.h"
+#include "my_malloc.h"
+#include "my_free.h"
+#include "my_realloc.h"
 
 int main() {
-    char *str = my_malloc(5);
+    int *ptr = my_calloc(10, sizeof(int));
+    for (int i = 0; i < 10; i++) {
+        printf("%d\n", ptr[i]);
+    }
+    my_free(ptr);
 
-    for (int i = 0; i < 5; i++)
-        str[i] = 'a';
-    str[4] = '\0';
-
-    printf("%s", str);
-
-    str = my_realloc(str, 10);
-
-    for (int i = 4; i < 10; i++)
-        str[i] = 'b';
-    str[9] = '\0';
-
-    printf("%s", str);
+    char *str = my_malloc(12);
+    str[0] = 'H';
+    str[1] = 'e';
+    str[2] = 'l';
+    str[3] = 'l';
+    str[4] = 'o';
+    str[5] = ' ';
+    str[6] = 'W';
+    str[7] = 'o';
+    str[8] = 'r';
+    str[9] = 'l';
+    str[10] = 'd';
+    str[11] = '\0';
+    printf("%s\n", str);
 
     my_free(str);
 
