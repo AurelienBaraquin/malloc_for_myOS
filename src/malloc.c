@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "bloc.h"
-#include <stdio.h>
 
 void fusion_adjacent_blocks(block_t *first);
 
