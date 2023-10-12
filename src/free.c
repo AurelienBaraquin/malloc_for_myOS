@@ -41,5 +41,5 @@ void my_free(void *ptr) {
         return;
     }
 
-    block->free = 1;
+    block->free++;
 }

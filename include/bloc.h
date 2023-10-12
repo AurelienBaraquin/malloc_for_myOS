@@ -13,3 +13,5 @@ typedef struct block_s {
 } block_t;
 
 extern void *program_break(void);
+int split_block(block_t *block, size_t size);
+block_t *search_empty_block(block_t *first, size_t size);

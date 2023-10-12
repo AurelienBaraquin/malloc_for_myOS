@@ -1,4 +1,4 @@
-CFLAGS = -W -Wall -Wextra -I./include
+CFLAGS = -W -Wall -Wextra -I./include -g3
 
 SRC = $(shell find . -name '*.c')
 ASM_SRC = $(shell find . -name '*.asm')  # Ajoutez cette ligne pour les fichiers ASM

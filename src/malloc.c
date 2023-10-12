@@ -12,12 +12,12 @@ int program_keeper(size_t size) {
     if (size == (size_t)-42)
         return keeper;
     keeper += size;
-    // printf("keeper: %d\n", keeper);
     return keeper;
 }
 
 static void *alloc_mem(size_t size) {
-    void *current_brk, *new_brk;
+    void *current_brk;
+    void *new_brk;
 
     current_brk = program_break();
     asm (
@@ -37,6 +37,8 @@ static void *alloc_mem(size_t size) {
 
 static void *alloc_block(size_t size) {
     block_t *block = alloc_mem(size + sizeof(block_t));
+    if (block == NULL)
+        return NULL;
     block->size = size;
     block->free = 0;
     block->next = NULL;
@@ -49,13 +51,19 @@ void *my_malloc(size_t size) {
     fusion_adjacent_blocks(list);
 
     if (list == NULL) {
-        list = alloc_block(size);
+        if ((list = alloc_block(size)) == NULL)
+            return NULL;
         return ALLOWED_SPACE_IN_BLOCK(list);
     }
 
+    if ((current = search_empty_block(list, size)) != NULL)
+        return ALLOWED_SPACE_IN_BLOCK(current);
+
+    current = list;
     while (current->next != NULL)
         current = current->next;
-    current->next = alloc_block(size);
+    if ((current->next = alloc_block(size)) == NULL)
+        return NULL;
     return ALLOWED_SPACE_IN_BLOCK(current->next);
 }
 
