@@ -36,5 +36,16 @@ int main() {
     my_free(str2);
     my_free(str3);
 
+    char *str4 = my_malloc(15);
+
+    for (int i = 0; i < 15; i++)
+        str4[i] = 'b';
+    str4[13] = '\n';
+    str4[14] = '\0';
+
+    printf("%s", str4);
+
+    my_free(str4);
+
     return 0;
 }

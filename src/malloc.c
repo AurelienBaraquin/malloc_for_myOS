@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "bloc.h"
+#include <stdio.h>
+
+void fusion_adjacent_blocks(block_t *first);
 
 int program_keeper(size_t size) {
     static int keeper = 0;
@@ -9,6 +12,7 @@ int program_keeper(size_t size) {
     if (size == (size_t)-42)
         return keeper;
     keeper += size;
+    // printf("keeper: %d\n", keeper);
     return keeper;
 }
 
@@ -42,6 +46,7 @@ static void *alloc_block(size_t size) {
 void *my_malloc(size_t size) {
     static block_t *list = NULL;
     block_t *current = list;
+    fusion_adjacent_blocks(list);
 
     if (list == NULL) {
         list = alloc_block(size);
@@ -56,10 +61,4 @@ void *my_malloc(size_t size) {
 
 __attribute__((destructor)) void reset_program_break(void) {
     sbrk(-program_keeper(-0x2A));
-}
-
-void my_free(void *ptr) {
-    block_t *block = PTR_TO_BLOCK(ptr);
-
-    block->free = 1;
 }
