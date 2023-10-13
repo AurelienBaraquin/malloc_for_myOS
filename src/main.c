@@ -3,30 +3,39 @@
 #include "my_malloc.h"
 #include "my_free.h"
 #include "my_realloc.h"
+#include "my_aligned_alloc.h"
 
 int main() {
-    int *ptr = my_calloc(10, sizeof(int));
-    for (int i = 0; i < 10; i++) {
-        printf("%d\n", ptr[i]);
+    char *str = my_aligned_malloc(16, 4);
+    for (int i = 0; i < 16; i++) {
+        str[i] = 'a';
     }
-    my_free(ptr);
-
-    char *str = my_malloc(12);
-    str[0] = 'H';
-    str[1] = 'e';
-    str[2] = 'l';
-    str[3] = 'l';
-    str[4] = 'o';
-    str[5] = ' ';
-    str[6] = 'W';
-    str[7] = 'o';
-    str[8] = 'r';
-    str[9] = 'l';
-    str[10] = 'd';
-    str[11] = '\0';
+    str[15] = '\0';
     printf("%s\n", str);
-
     my_free(str);
 
+    str = my_malloc(87);
+    for (int i = 0; i < 53; i++) {
+        str[i] = 'b';
+    }
+    str[52] = '\0';
+    printf("%s\n", str);
+    my_free(str);
+
+    str = my_aligned_malloc(8, 64);
+    for (int i = 0; i < 8; i++) {
+        str[i] = 'c';
+    }
+    str[7] = '\0';
+    printf("%s\n", str);
+    my_free(str);
+
+    str = my_calloc(8, 8);
+    for (int i = 0; i < 8; i++) {
+        str[i] = 'd';
+    }
+    str[7] = '\0';
+    printf("%s\n", str);
+    my_free(str);
     return 0;
 }

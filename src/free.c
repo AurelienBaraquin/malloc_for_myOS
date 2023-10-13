@@ -1,5 +1,6 @@
 #include "bloc.h"
 #include <unistd.h>
+#include <errno.h>
 
 void fusion(block_t *block) {
     if (block == NULL) {
@@ -32,14 +33,22 @@ void fusion_adjacent_blocks(block_t *first) {
 
 void my_free(void *ptr) {
     if (ptr == NULL) {
+        errno = EINVAL;
         return;
     }
 
-    block_t *block = PTR_TO_BLOCK(ptr);
+    void *original_address = ((void **)ptr)[-1];
+
+    // Calculez le pointeur vers le bloc original en utilisant l'ajustement stocké
+    block_t *block = (block_t *)((void *)original_address);
 
     if (block == NULL) {
+        errno = EINVAL;
         return;
     }
 
+    printf("free  %p\n", block);
+
+    // Marquez le bloc comme libre
     block->free++;
 }

@@ -2,13 +2,14 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "bloc.h"
+#include <errno.h>
 
 void fusion_adjacent_blocks(block_t *first);
 
 int program_keeper(size_t size) {
     static int keeper = 0;
 
-    if (size == (size_t)-42)
+    if (size == (size_t)-0x2A)
         return keeper;
     keeper += size;
     return keeper;
@@ -28,19 +29,24 @@ static void *alloc_mem(size_t size) {
         : "r" (size), "0" (current_brk)
         : "rax", "rdi", "rcx", "r11", "memory"
     );
-    if (new_brk == (void *)-1)
+    if (new_brk == (void *)-1) {
+        errno = ENOMEM;
         return NULL;
+    }
     program_keeper(size);
     return current_brk;
 }
 
 static void *alloc_block(size_t size) {
-    block_t *block = alloc_mem(size + sizeof(block_t));
+    block_t *block = alloc_mem(size + sizeof(block_t) + ALIGNED_MEM_SIZE);
     if (block == NULL)
         return NULL;
     block->size = size;
     block->free = 0;
     block->next = NULL;
+    void *aligned_ptr = (void *)((size_t)block + sizeof(block_t) + ALIGNED_MEM_SIZE);
+    ((void **)aligned_ptr)[-1] = block;
+    printf("alloc %p\n", block);
     return block;
 }
 
@@ -59,8 +65,9 @@ void *my_malloc(size_t size) {
         return ALLOWED_SPACE_IN_BLOCK(current);
 
     current = list;
-    while (current->next != NULL)
+    while (current->next != NULL) {
         current = current->next;
+    }
     if ((current->next = alloc_block(size)) == NULL)
         return NULL;
     return ALLOWED_SPACE_IN_BLOCK(current->next);

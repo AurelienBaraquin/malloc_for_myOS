@@ -2,9 +2,11 @@
 
 #include <sys/types.h>
 
-#define ALLOWED_SPACE_IN_BLOCK(block) (void *)(((void *)block) + sizeof(block_t))
 #define ORIGINAL_VALUE_KEEPER program_keeper(-0x2A)
-#define PTR_TO_BLOCK(ptr) (block_t *)((void *)ptr - sizeof(block_t))
+
+#define ALIGNED_MEM_SIZE sizeof(void *)
+#define PTR_TO_BLOCK(ptr) (block_t *)((void *)ptr - sizeof(block_t) - ALIGNED_MEM_SIZE)
+#define ALLOWED_SPACE_IN_BLOCK(block) (void *)(((void *)block) + sizeof(block_t) + ALIGNED_MEM_SIZE)
 
 typedef struct block_s {
     size_t size;
