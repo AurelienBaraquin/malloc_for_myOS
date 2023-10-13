@@ -46,7 +46,6 @@ static void *alloc_block(size_t size) {
     block->next = NULL;
     void *aligned_ptr = (void *)((size_t)block + sizeof(block_t) + ALIGNED_MEM_SIZE);
     ((void **)aligned_ptr)[-1] = block;
-    printf("alloc %p\n", block);
     return block;
 }
 

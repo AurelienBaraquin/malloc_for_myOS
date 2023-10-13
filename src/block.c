@@ -24,7 +24,6 @@ block_t *search_empty_block(block_t *first, size_t size) {
 
     while (current != NULL) {
         if (current->free && split_block(current, size) == 0) {
-            printf("split %p\n", current);
             return current;
         }
         current = current->next;

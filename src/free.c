@@ -39,7 +39,6 @@ void my_free(void *ptr) {
 
     void *original_address = ((void **)ptr)[-1];
 
-    // Calculez le pointeur vers le bloc original en utilisant l'ajustement stocké
     block_t *block = (block_t *)((void *)original_address);
 
     if (block == NULL) {
@@ -47,8 +46,5 @@ void my_free(void *ptr) {
         return;
     }
 
-    printf("free  %p\n", block);
-
-    // Marquez le bloc comme libre
     block->free++;
 }
