@@ -4,38 +4,22 @@
 #include "my_free.h"
 #include "my_realloc.h"
 #include "my_aligned_alloc.h"
+#include "my_posix_memalign.h"
 
 int main() {
-    char *str = my_aligned_malloc(16, 4);
-    for (int i = 0; i < 16; i++) {
+    char *str = my_malloc(1000);
+    for (int i = 0; i < 1000; i++) {
         str[i] = 'a';
     }
-    str[15] = '\0';
+    str[999] = '\0';
     printf("%s\n", str);
     my_free(str);
-
-    str = my_malloc(87);
-    for (int i = 0; i < 53; i++) {
-        str[i] = 'b';
-    }
-    str[52] = '\0';
-    printf("%s\n", str);
-    my_free(str);
-
-    str = my_aligned_malloc(8, 64);
-    for (int i = 0; i < 8; i++) {
-        str[i] = 'c';
-    }
-    str[7] = '\0';
-    printf("%s\n", str);
-    my_free(str);
-
-    str = my_calloc(8, 8);
-    for (int i = 0; i < 8; i++) {
-        str[i] = 'd';
-    }
-    str[7] = '\0';
-    printf("%s\n", str);
-    my_free(str);
+    char *a = my_aligned_malloc(10, 16);
+    char *b = my_aligned_malloc(10, 32);
+    char *c = my_calloc(10, 1);
+    my_free(a);
+    my_free(b);
+    c = my_realloc(c, 20);
+    my_free(c);
     return 0;
 }

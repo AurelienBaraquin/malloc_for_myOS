@@ -19,7 +19,6 @@ void* my_aligned_malloc(size_t size, size_t alignment) {
         return NULL;
 
     void* aligned_ptr = (void*)((size_t)new_block + adjustment);
-    printf("aligned %d\n", adjustment);
 
     ((void **)aligned_ptr)[-1] = new_block - 32;
 

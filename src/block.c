@@ -8,13 +8,14 @@ int split_block(block_t *block, size_t size) {
 
     block_t *new_block = (block_t *)(((char *)block) + size + sizeof(block_t));
 
-    new_block->size = block->size - size - sizeof(block_t);
+    new_block->size = block->size - size - sizeof(block_t) - ALIGNED_MEM_SIZE;
     new_block->free = 1;
     new_block->next = block->next;
 
     block->size = size;
     block->free++;
     block->next = new_block;
+    ((void **)ALLOWED_SPACE_IN_BLOCK(block))[-1] = block;
     return 0;
 }
 
@@ -22,8 +23,10 @@ block_t *search_empty_block(block_t *first, size_t size) {
     block_t *current = first;
 
     while (current != NULL) {
-        if (current->free && split_block(current, size) == 0)
+        if (current->free && split_block(current, size) == 0) {
+            printf("split %p\n", current);
             return current;
+        }
         current = current->next;
     }
     return NULL;
