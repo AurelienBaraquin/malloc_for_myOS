@@ -20,7 +20,9 @@ void* my_aligned_malloc(size_t size, size_t alignment) {
 
     void* aligned_ptr = (void*)((size_t)new_block + adjustment);
 
-    ((void **)aligned_ptr)[-1] = new_block - 32;
-
+    ((void **)aligned_ptr)[-1] = new_block - sizeof(block_t) - ALIGNED_MEM_SIZE;
+    #ifdef DEBUG
+        printf("Adjust block of size %lu at user side address : %p to %p\n", size, new_block, aligned_ptr);
+    #endif
     return aligned_ptr;
 }

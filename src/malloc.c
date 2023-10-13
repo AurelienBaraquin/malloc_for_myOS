@@ -6,15 +6,6 @@
 
 void fusion_adjacent_blocks(block_t *first);
 
-int program_keeper(size_t size) {
-    static int keeper = 0;
-
-    if (size == (size_t)-0x2A)
-        return keeper;
-    keeper += size;
-    return keeper;
-}
-
 static void *alloc_mem(size_t size) {
     void *current_brk;
     void *new_brk;
@@ -33,7 +24,6 @@ static void *alloc_mem(size_t size) {
         errno = ENOMEM;
         return NULL;
     }
-    program_keeper(size);
     return current_brk;
 }
 
@@ -46,6 +36,9 @@ static void *alloc_block(size_t size) {
     block->next = NULL;
     void *aligned_ptr = (void *)((size_t)block + sizeof(block_t) + ALIGNED_MEM_SIZE);
     ((void **)aligned_ptr)[-1] = block;
+    #ifdef DEBUG
+        printf("Allocated block of size %lu at %p\n", size, block);
+    #endif
     return block;
 }
 
@@ -70,8 +63,4 @@ void *my_malloc(size_t size) {
     if ((current->next = alloc_block(size)) == NULL)
         return NULL;
     return ALLOWED_SPACE_IN_BLOCK(current->next);
-}
-
-__attribute__((destructor)) void reset_program_break(void) {
-    sbrk(-program_keeper(-0x2A));
 }

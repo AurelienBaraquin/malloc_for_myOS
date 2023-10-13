@@ -1,6 +1,7 @@
 #include <stdarg.h>
 #include <unistd.h>
 #include "my_malloc.h"
+#include "my_calloc.h"
 
 void *recursive_alloc(size_t base_size, size_t dims[], int n, int i) {
     if (i == n - 1) {
@@ -42,10 +43,10 @@ void* ralloc(int n, ...) {
 
 void *recursive_calloc(size_t base_size, size_t dims[], int n, int i) {
     if (i == n - 1) {
-        return my_calloc(base_size * dims[i]);
+        return my_calloc(1, base_size * dims[i]);
     }
 
-    void **new_ptr = my_calloc(dims[i] * sizeof(void*));
+    void **new_ptr = my_calloc(1, dims[i] * sizeof(void*));
     if (new_ptr == NULL) {
         return NULL;
     }
