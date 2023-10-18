@@ -37,7 +37,7 @@ static void *alloc_block(size_t size) {
     void *aligned_ptr = (void *)((size_t)block + sizeof(block_t) + ALIGNED_MEM_SIZE);
     ((void **)aligned_ptr)[-1] = block;
     #ifdef DEBUG
-        printf("Allocated block of size %lu at %p\n", size, block);
+        printf("Allocated block (%lu) %p\n", size, block);
     #endif
     return block;
 }

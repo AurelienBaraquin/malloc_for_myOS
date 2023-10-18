@@ -8,17 +8,20 @@
 #include "ralloc.h"
 
 int main(void) {
-    char *str = my_aligned_malloc(3, 16);
-    str[0] = 'a';
-    str[1] = 'b';
-    str[2] = '\0';
-    printf("%s\n", str);
-    char *str2 = my_malloc(3);
-    str2[0] = 'c';
-    str2[1] = 'd';
-    str2[2] = '\0';
-    printf("%s\n", str2);
-    my_free(str2);
-    my_free(str);
+    char **ptr = my_calloc(100, sizeof(char *));
+    for (int i = 0; i < 100; ++i) {
+        ptr[i] = my_malloc(999);
+        for (int j = 0; j < 999; ++j) {
+            ptr[i][j] = 'a';
+        }
+        ptr[i][998] = '\0';
+    }
+    // for (int i = 0; i < 100; ++i) {
+    //     printf("%s\n", ptr[i]);
+    // }
+    for (int i = 0; i < 100; ++i) {
+        my_free(ptr[i]);
+    }
+    my_free(ptr);
     return 0;
 }

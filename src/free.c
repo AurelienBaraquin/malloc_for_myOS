@@ -10,7 +10,7 @@ void fusion(block_t *block) {
     block_t *next = block->next;
 
     #ifdef DEBUG
-        printf("Fusion block of size %lu at %p with %p\n", block->size, block, next);
+        printf("Fusion block (%lu) %p (%lu) with %p (%lu) = %p (%lu)\n", block->size, block, block->size, next, next->size, block, block->size + next->size + sizeof(block_t) + ALIGNED_MEM_SIZE);
     #endif
 
     if (next != NULL && next->free) {
@@ -51,7 +51,7 @@ void my_free(void *ptr) {
     }
 
     #ifdef DEBUG
-        printf("Freeing block of size %lu at %p\n", block->size, block);
+        printf("Freeing block (%lu) %p\n", block->size, block);
     #endif
 
     block->free++;
