@@ -9,7 +9,7 @@ int split_block(block_t *block, size_t size) {
     block_t *new_block = (block_t *)(((char *)block) + size + sizeof(block_t) + ALIGNED_MEM_SIZE);
 
     #ifdef DEBUG
-        printf("Split block of size %lu at %p into %p and %p\n", block->size, block, block, new_block);
+        printf("Split block of size %lu at %p into %p (%lu) and %p (%lu)\n", block->size, block, block, size, new_block, block->size - size);
     #endif
 
     new_block->size = block->size - size - sizeof(block_t) - ALIGNED_MEM_SIZE;

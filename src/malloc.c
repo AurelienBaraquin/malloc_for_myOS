@@ -32,7 +32,7 @@ static void *alloc_block(size_t size) {
     if (block == NULL)
         return NULL;
     block->size = size;
-    block->free = 0;
+    block->free = 1;
     block->next = NULL;
     void *aligned_ptr = (void *)((size_t)block + sizeof(block_t) + ALIGNED_MEM_SIZE);
     ((void **)aligned_ptr)[-1] = block;
@@ -43,14 +43,15 @@ static void *alloc_block(size_t size) {
 }
 
 void *my_malloc(size_t size) {
+    if (size % 2 != 0)
+        ++size;
     static block_t *list = NULL;
     block_t *current = list;
     fusion_adjacent_blocks(list);
 
     if (list == NULL) {
-        if ((list = alloc_block(size)) == NULL)
+        if ((list = alloc_block(4096 * 2 - sizeof(block_t) - ALIGNED_MEM_SIZE)) == NULL)
             return NULL;
-        return ALLOWED_SPACE_IN_BLOCK(list);
     }
 
     if ((current = search_empty_block(list, size)) != NULL)
@@ -60,7 +61,7 @@ void *my_malloc(size_t size) {
     while (current->next != NULL) {
         current = current->next;
     }
-    if ((current->next = alloc_block(size)) == NULL)
+    if ((current->next = alloc_block(4096 * 2 - sizeof(block_t) - ALIGNED_MEM_SIZE)) == NULL)
         return NULL;
-    return ALLOWED_SPACE_IN_BLOCK(current->next);
+    return my_malloc(size);
 }
